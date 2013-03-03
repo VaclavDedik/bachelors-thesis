@@ -1,0 +1,40 @@
+\documentclass[11pt,oneside]{fithesis2}
+
+\usepackage[plainpages=false, pdfpagelabels]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[czech,english]{babel}
+\usepackage{url}
+\usepackage{indentfirst}
+\usepackage{blindtext}
+\usepackage{xcolor}
+
+\newcommand{\faketext}[1][1]{
+    \textcolor{black!50}{\blindtext[#1]}
+    }
+
+\thesistitle{Thesis management system for industrial partner Red Hat}
+\thesissubtitle{Bachelor's Thesis}
+\thesisstudent{Václav Dedík}
+\thesiswoman{false}
+\thesisfaculty{fi}
+\thesisyear{Spring 2013}
+\thesislang{en}
+
+\setlength{\parindent}{0,5cm}
+
+\begin{document}
+\FrontMatter
+\ThesisTitlePage
+
+\begin{ThesisDeclaration}		
+\DeclarationText
+\end{ThesisDeclaration}
+
+\MainMatter
+
+\tableofcontents
+
+\input{chapters/1_Introduction}
+
+\end{document}
+
