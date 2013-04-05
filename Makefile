@@ -2,10 +2,9 @@
 
 all: bp
 
-bp: bp.pdf
-
-bp.pdf: index.tex
-	pdflatex index.tex
+bp: 
+	pdflatex -interaction=nonstopmode -synctex=1 index.tex
+	pdflatex -interaction=nonstopmode -synctex=1 index.tex > /dev/null
 	mv index.pdf bp.pdf
 
 start: bp
