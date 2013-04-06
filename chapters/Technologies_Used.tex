@@ -1,3 +1,46 @@
 \chapter{Technologies Used}
 
-\faketext[30]
+In this chapter the author will describe the technologies and tools that were used for the implementation of the thesis management system. The only requirement of the thesis description was to use platform \emph{Grails} and the requirements of the external supervisor were use platform \emph{OpenShift} for deployment, \emph{GitHub} for source code hosting and a \emph{GPL} compatible license.
+
+\section{Groovy}
+
+Groovy is a dynamic object-oriented programming language for the Java platform and therefore "makes modern programming features available to Java developers with almost-zero learning curve"\cite{groovy-homepage}. Groovy compiles to Java bytecode, so it can be seamlessly integrated with all Java classes and libraries\cite{groovy-homepage}. It has a lot of features that make writing code less verbose and more expressive, like:
+
+\begin{itemize}
+    \item Closures -- anonymous functions that can be written on one line without making the readability suffer
+    \item Reasonable defaults like public methods, private attributes with default accessors, final classes
+    \item Support for Domain Specific Languages which makes the code one of the most compact among other programming languages
+    \item Inferred type system that makes the code more DRY\footnote{Don't Repeat Yourself}
+    \item Null safe operator, Elvis operator
+\end{itemize}
+
+As Groovy features a dynamic type system, it makes the code more readable and less verbose, however, as the type checks happens at run time rather than at compile time, the code is more error-prone since a type error is not thrown until the user accesses the affected code.
+
+Groovy is the main programming language that is used in the project since the Grails platform is based on it.
+
+\section{Grails}
+
+"Grails is an Open Source, full stack, web application framework for the Java Virtual Machine. It takes advantage of the Groovy programming language and convention over configuration to provide a productive and stream-lined development experience."\cite{grails-homepage}. It is a well documented, easy to use and easily extensible platform that is designed according to the MVC\footnote{Model--view--controller} paradigm which divides the application into three components that interact with each other which greatly improves the project code's readability and maintainability. The Grails framework uses several well-known Java technologies under the hood, including:
+
+\begin{description}
+    \item[Hibernate] -- ORM\footnote{Object-relational mapping} framework that is used as layer for data access, Grails wraps its API with Groovy making it much easier to configure and use
+    \item[Spring] -- The most popular application development framework for enterprise Java\cite{springsource-homepage}, Java EE competitor
+    \item[SiteMesh] -- Web application template framework which follows decorator design pattern, Grails uses it for GSP\footnote{Groovy Server Pages} views
+\end{description}
+
+To start with Grails, all you need to do is download and install the Grails distribution and then execute commands \texttt{grails create-app [name]} which creates the directory structure and default configuration of your application. You can then write your domain model and, thanks to grails feature \emph{Scaffolding}, auto-generate the controllers and views for a particular domain class. To start the application, you simply execute \texttt{grails run-app} and the application is launched in development environment on Tomcat 7 servlet container. This experience makes first steps with Grails very easy and fun, the only caveat is that the auto-generated code needs a lot of polishing to improve its readability.
+
+\section{PostgreSQL}
+
+\faketext[5]
+
+\section{MongoDB}
+
+\faketext[5]
+
+\section{OpenShift}
+
+OpenShift is a Platform as a Service product from Red Hat.
+
+\faketext[10]
+
