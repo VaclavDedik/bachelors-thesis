@@ -4,7 +4,7 @@ In this chapter the author will describe the technologies and tools that were us
 
 \section{Groovy}
 
-Groovy is a dynamic object-oriented programming language for the Java platform and therefore "makes modern programming features available to Java developers with almost-zero learning curve"\cite{groovy-homepage}. Groovy compiles to Java bytecode, so it can be seamlessly integrated with all Java classes and libraries\cite{groovy-homepage}. It has a lot of features that make writing code less verbose and more expressive, like:
+Groovy is a dynamic object-oriented programming language for the Java platform and therefore ``makes modern programming features available to Java developers with almost-zero learning curve''\cite{groovy-homepage}. Groovy compiles to Java bytecode, so it can be seamlessly integrated with all Java classes and libraries\cite{groovy-homepage}. It has a lot of features that make writing code less verbose and more expressive, like:
 
 \begin{itemize}
     \item Closures -- anonymous functions that can be written on one line without making the readability suffer
@@ -20,7 +20,7 @@ Groovy is the main programming language that is used in the project since the Gr
 
 \section{Grails}
 
-"Grails is an Open Source, full stack, web application framework for the Java Virtual Machine. It takes advantage of the Groovy programming language and convention over configuration to provide a productive and stream-lined development experience."\cite{grails-homepage}. It is a well documented, easy to use and easily extensible platform that is designed according to the MVC\footnote{Model--view--controller} paradigm which divides the application into three components that interact with each other which greatly improves the project code's readability and maintainability. The Grails framework uses several well-known Java technologies under the hood, including:
+``Grails is an Open Source, full stack, web application framework for the Java Virtual Machine. It takes advantage of the Groovy programming language and convention over configuration to provide a productive and stream-lined development experience.''\cite{grails-homepage}. It is a well documented, easy to use and easily extensible platform that is designed according to the MVC\footnote{Model--view--controller} paradigm which divides the application into three components that interact with each other which greatly improves the project code's readability and maintainability. The Grails framework uses several well-known Java technologies under the hood, including:
 
 \begin{description}
     \item[Hibernate] -- ORM\footnote{Object-relational mapping} framework that is used as layer for data access, Grails wraps its API with Groovy making it much easier to configure and use
@@ -30,13 +30,46 @@ Groovy is the main programming language that is used in the project since the Gr
 
 To start with Grails, all you need to do is download and install the Grails distribution and then execute commands \texttt{grails create-app [name]} which creates the directory structure and default configuration of your application. You can then write your domain model and, thanks to grails feature \emph{Scaffolding}, auto-generate the controllers and views for a particular domain class. To start the application, you simply execute \texttt{grails run-app} and the application is launched in development environment on Tomcat 7 servlet container. This experience makes first steps with Grails very easy and fun, the only caveat is that the auto-generated code needs a lot of polishing to improve its readability.
 
+\section{Git and GitHub}
+
+It is nearly impossible to develop a project as big as the thesis management system without a version control, therefore you usually need to choose a version control system. There are a lot of options you can choose from, including Subversion, Mercurial or CVS, however, Git is undoubtedly one of the best options as it is the most popular, flexible and scalable VCS\footnote{Version control system} there is. It is designed and developed by Linus Torvalds, a principal software developer of the Linux kernel and it features very fast branching, decentralized system and a lot of useful commands like \texttt{rebase} or \texttt{squash}.
+
+GitHub is a source code hosting for projects that use Git as a version control tool. It is free (unless you need a private repository) and easy to use web service and with features like forking and code reviewing, it is the most popular code host on the planet\cite{github-features}.
+
 \section{PostgreSQL}
 
-\faketext[5]
+There are many ways you can store data of your application, you can store it in a file or you can use the filesystem hierarchy. These solutions are not, however, scalable enough to handle an amount of work that most applications need and for that reason, more than 30 years ago, Oracle introduced the first relational database management system (RDBMS) that stores data in relational tables. Relational databases developed the best mix of simplicity, performance, scalability and compatibility over the years therefore they are the predominant choice in storing data even though they are not suitable for storing of objects of current popular object oriented programming languages like Java. There are many technologies that mitigate these drawbacks like ORM or RowSet. For example, ORM frameworks usually provide an API that effectively creates a ``virtual object database''.
+
+To manage data in a relational database, the SQL language was introduced. SQL allows you to select, update, delete or insert data into relational database using an easy declarative syntax. For example, query \texttt{SELECT * FROM thesis} returns all data in table \texttt{thesis} and query \texttt{DELETE FROM thesis WHERE id = 1} deletes all rows that contains \texttt{1} in column \texttt{id} from table \texttt{thesis}. Modern relational databases support features like triggers, cursors or procedural SQL which allows you to create the back end of your application entirely in SQL syntax.
+
+One of the most convincing features of relational databases is transaction support. A transaction is a group of operations that have the following properties:
+
+\begin{itemize}
+    \item Atomicity -- Either all operations occur, or nothing occurs. This prevents occurring of partial updates to the database.
+    \item Consistency -- No operations violate integrity constraints.
+    \item Isolation -- Two concurrent transaction are isolated from changes done by the other.
+    \item Durability -- When a transaction is finished, all data is saved permanently even if the system, for example, crashes.
+\end{itemize}
+
+There are a lot of relational databases, the most popular are MySQL, SQLite and PostgreSQL which is the one we chose for the thesis management system. This database offers everything most applications require and is easy to configure with a great support.
 
 \section{MongoDB}
 
-\faketext[5]
+MongoDB is a NoSQL database written in C++\cite{mongodb-homepage} that stores data in JSON\footnote{JavaScript Object Notation}-style documents. It features high scalability, master-slave replication, load balancing, file storage and, as well as regular relational databases, it supports indexes on attributes. 
+
+In the past 5 years, NoSQL databases have been getting more popular with MongoDB on top\cite{db-ranking}. This happens mostly because relational databases are hard to scale and mapping objects on JSON objects is much easier than on tables, even if you use a really good ORM framework. Another reason is that objects in dynamic languages tend to change number of attributes at runtime, with MongoDB, all attributes get stored because MongoDB offers dynamic schemas.
+
+MongoDB, as opposed to relational databases, does not store data in tables. Instead of tables, MongoDB stores data in collections of documents, so a table in a relational database is equivalent to a collection in MongoDB and a row in a table is equivalent to a document. In practice, if you develop in an OO\footnote{Object Oriented} programing language, in a relational database, a table usually represents a class (or type) and a table row represents an instance of a class, but if you use MongoDB, a collection represents a class and a document represents an instance which is how MongoDB stores data in comparison with a relational database.
+
+CRUD\footnote{Create, Read, Update, Delete} operations in MongoDB are much more user friendly for people that are familiar with OO programing languages. Read operations are done via a query with the following syntax:
+
+\begin{verbatim}
+db.collection.find( <query>, <projection> )
+\end{verbatim}
+
+Where the \texttt{<query>} argument corresponds to the \texttt{WHERE} statement of an SQL \texttt{SELECT} query and \texttt{<projection>} argument corresponds to the set of arguments following an SQL \texttt{SELECT} query. Write operations follows the same syntax but instead of \texttt{find} method, you use either \texttt{insert}, \texttt{update} or \texttt{remove} method.
+
+There are some drawbacks a newcomer from RDBMS must consider, though. If you choose MongoDB for a project, you must manage transactions in your application logic because MongoDB does not support them. And write operations are atomic only on the level of a single document. You cannot count on integrity constraints either because MongoDB does not have any apart from the very basic ones. All these drawbacks can be mitigated by a good framework but it makes sense to consider the choice of a database storage carefully.
 
 \section{OpenShift}
 
