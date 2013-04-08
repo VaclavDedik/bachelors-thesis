@@ -73,7 +73,24 @@ There are some drawbacks a newcomer from RDBMS must consider, though. If you cho
 
 \section{OpenShift}
 
-OpenShift is a Platform as a Service product from Red Hat.
+OpenShift is Red Hat's Cloud Computing Platform as a Service offering\cite{openshift-homepage}. Platform as a Service (PaaS) offerings facilitate the deployment of web-based applications without the cost and complexity of buying servers and setting them up\cite{guardian-google-paas}. In short, this means that you can set up your production environment with all software needed (database, application server) in a matter of minutes and you can deploy your application by one command-line command.
 
-\faketext[10]
+\begin{figure}[htbp]
+    \centering
+        \includegraphics[scale=0.5]{./images/overview-paas.png}
+    \caption{Platform as a Service overview}
+\end{figure}
+
+Creating your first application on OpenShift is very straightforward. First, you choose a type of application which is called a cartridge in OpenShift terminology. You can choose from a variety of cartridges including, for example, JBoss Application Server, Tomcat 7, Ruby on Rails and Django, or you can choose a Do It Yourself cartridge and set up the whole environment yourself. Once you have done that, you can choose a public URL, a source code repository, gears and scaling. A gear is container with limited resources that runs your application. By default, you can only choose the default small gear. If you pay a monthly fee, you can choose medium or large gear with more resources at your disposal. Scaling allows your application to be load-balanced, i.e. if your applications' traffic increases, OpenShift will allocate more gears. When you have your application created, you can do some basic configuration through the web interface or you can add another cartridge to your application, e.g. a database or Cron. If you need to connect to the server where your application runs, you can open a Secure Shell session (supposing you set up your public RSA key). This overall flexibility makes it easy to deploy your application without any fuss and decreases time spent managing software and hardware, so from that point of view, it makes sense to use OpenShift even if you have no choice but to use Do It Yourself cartridge.
+
+If setting up a new OpenShift application is simple, deploying one is even more simple. You just push the application's source code to either the repository you specified or the repository that was created for you. You might need to set some properties in your application (e.g. database credentials), though. Fortunately, OpenShift exports all needed properties as environment variables so that you could access them via the API of your programming language and use them wherever necessary. If you need to inject or modify some environment variables at some point (e.g. before or after build), you can use action hooks. These lifecycle hooks allows you to execute any kind of shell script at a certain point in time, for example, you might want to append a property to the \texttt{JAVA\_OPTS} environment variable just before the build of your application. To do that, you put following script in \texttt{\$\{project.dir\}/.openshift/action\_hooks/pre\_build}:
+
+\begin{verbatim}
+#!/bin/bash
+export JAVA_OPTS="$JAVA_OPTS -DsomeProperty=true"
+\end{verbatim}
+
+The script above gets executed directly, so you can use PHP, Python, Ruby or any other interpreted programing language.
+ 
+\faketext[3]
 
