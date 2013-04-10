@@ -16,7 +16,7 @@ Groovy is a dynamic object-oriented programming language for the Java platform a
 
 As Groovy features a dynamic type system, it makes the code more readable and less verbose, however, as the type checks happens at run time rather than at compile time, the code is more error-prone since a type error is not thrown until the user accesses the affected code.
 
-Groovy is the main programming language that is used in the project since the Grails platform is based on it.
+Groovy is the main programming language that is used in the thesis management system since the Grails platform is based on it.
 
 \section{Grails}
 
@@ -81,7 +81,9 @@ OpenShift is Red Hat's Cloud Computing Platform as a Service offering\cite{opens
     \caption{Platform as a Service overview}
 \end{figure}
 
-Creating your first application on OpenShift is very straightforward. First, you choose a type of application which is called a cartridge in OpenShift terminology. You can choose from a variety of cartridges including, for example, JBoss Application Server, Tomcat 7, Ruby on Rails and Django, or you can choose a Do It Yourself cartridge and set up the whole environment yourself. Once you have done that, you can choose a public URL, a source code repository, gears and scaling. A gear is container with limited resources that runs your application. By default, you can only choose the default small gear. If you pay a monthly fee, you can choose medium or large gear with more resources at your disposal. Scaling allows your application to be load-balanced, i.e. if your applications' traffic increases, OpenShift will allocate more gears. When you have your application created, you can do some basic configuration through the web interface or you can add another cartridge to your application, e.g. a database or Cron. If you need to connect to the server where your application runs, you can open a Secure Shell session (supposing you set up your public RSA key). This overall flexibility makes it easy to deploy your application without any fuss and decreases time spent managing software and hardware, so from that point of view, it makes sense to use OpenShift even if you have no choice but to use Do It Yourself cartridge.
+Red Hat is an open-source company, i.e. every project developed by Red Hat is open-source -- and so is OpenShift. OpenShift is build on RHEL\footnote{Red Hat Enterprise Linux} which is a stable Linux distribution with long-term support, it is written in Ruby programming language and it runs your application on Amazon EC2\footnote{Amazon Elastic Compute Cloud -- cloud computing platform that allows users to rent virtual computers}.
+
+Creating your first application on OpenShift is very straightforward. First, you choose a type of application which is called a cartridge in OpenShift terminology. You can choose from a variety of cartridges including, for example, JBoss Application Server, Tomcat 7, Ruby on Rails and Django, or you can choose a Do It Yourself cartridge and set up the whole environment yourself. Once you have done that, you can choose a public URL, a source code repository, gears and scaling. A gear is container with limited resources that runs your application, i.e. virtual server. By default, you can only choose the default small gear. If you pay a monthly fee, you can choose medium or large gear with more resources at your disposal. Scaling allows your application to be load-balanced, i.e. if your applications' traffic increases, OpenShift will allocate more gears. When you have your application created, you can do some basic configuration through the web interface or you can add another cartridge to your application, e.g. a database or Cron. If you need to connect to the server where your application runs, you can open a Secure Shell session (supposing you set up your public RSA key). This overall flexibility makes it easy to deploy your application without any fuss and decreases time spent managing software and hardware, so from that point of view, it makes sense to use OpenShift even if you have no choice but to use Do It Yourself cartridge.
 
 If setting up a new OpenShift application is simple, deploying one is even more simple. You just push the application's source code to either the repository you specified or the repository that was created for you. You might need to set some properties in your application (e.g. database credentials), though. Fortunately, OpenShift exports all needed properties as environment variables so that you could access them via the API of your programming language and use them wherever necessary. If you need to inject or modify some environment variables at some point (e.g. before or after build), you can use action hooks. These lifecycle hooks allows you to execute any kind of shell script at a certain point in time, for example, you might want to append a property to the \texttt{JAVA\_OPTS} environment variable just before the build of your application. To do that, you put following script in \texttt{\$\{project.dir\}/.openshift/action\_hooks/pre\_build}:
 
@@ -91,6 +93,16 @@ export JAVA_OPTS="$JAVA_OPTS -DsomeProperty=true"
 \end{verbatim}
 
 The script above gets executed directly, so you can use PHP, Python, Ruby or any other interpreted programing language.
- 
-\faketext[3]
+
+\section{Others}
+
+There are a lot of other technologies used in the thesis management system, to keep it short, the author will describe them just briefly.
+
+\begin{itemize}
+    \item Spring Security -- a framework that provides authentication and authorization for Java
+    \item Searchable -- Grails plugin that adds search functionality based on Compass and Apache Lucene\cite{searchable-documentation}
+    \item JQuery -- the most popular JavaScript framework
+    \item LESS -- CSS preprocessor
+    \item Twitter Bootstrap -- CSS framework that is the most popular project on GitHub
+\end{itemize}
 
