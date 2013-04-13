@@ -1,45 +1,48 @@
 \chapter{Project Architecture and Design}
 
-In the following text, the author will describe the architecture and design of the Thesis Management System including functional and non-functional requirements of the client.
+In the following text, the author will describe the architecture and design of the Thesis Management System including functional, non-functional requirements and the domain model. The author will also depict some design parts with UML\footnote{Unified Modeling Language} 2.0 diagrams, however, the UML diagrams are not to be regarded as blueprints of the system but rather as sketches and as such, some information that the author considers irrelevant or obvious could be let out. This is allowed as stated by Martin Fowler in his book UML Distilled\cite{fowler-uml}.
 
 \section{Functional Requirements}
 
 \begin{enumerate}
     \item User management\\
-    The system allows to CRUD users. A user contains fields full name, email and password.
+    The system allows to create, read, update and delete (CRUD) users. User contains fields full name, email and password.
 
     \item Registration\\
-    An anonymous user can sign up.
+    Anonymous users can sign up only with emails hosted at configured domain addresses.
 
     \item Log In\\
-    An anonymous user can sign in using email and password.
+    Anonymous users can sign in using email and password.
+
+    \item Site configuration\\
+    Administrator can configure certain aspects of the system, like allowed email domain addresses, site announcement and the terms of use.
 
     \item Thesis topic management\\
-    The system allows to create, read, update and delete (CRUD) a thesis topic. A topic contains fields title and description in two languages.
+    The system allows to CRUD thesis topics. Topic contains fields title and description in two languages.
 
     \item Category management\\
-    The system allows to CRUD categories. A category contains fields title and description.
+    The system allows to CRUD categories. Category contains fields title and description.
 
     \item Thesis topic can be added to categories.\\
-    Topics can be added to one or more categories which allows a user to browse topics in a category.
+    Topics can be added to one or more categories which allows users to browse topics in categories.
 
-    \item Tags can be assigned to a thesis topic\\
-    There can be zero or more tags assigned to a thesis topic.
+    \item Tags can be assigned to thesis topics\\
+    There can be zero or more tags assigned to one thesis topic.
 
     \item Thesis topic contains field for an external supervisor (owner)\\
-    The supervisor has the authority to manage thesis topics created by them.
+    The owner has the authority to manage thesis topics created by them.
 
     \item University management\\
-    The system allows to CRUD universities. A university contain a field for the name of the university.
+    The system allows to CRUD universities. University contains a field for the name of the university.
 
-    \item Thesis topic contains field for list of universities\\
-    This field contains the list of universities that the topic is offered to. A thesis topic can be offered to one or more universities.
+    \item Thesis topic contains field for the list of universities\\
+    This field contains the list of universities that the topic is offered to. One thesis topic can be offered to one or more universities.
 
-    \item Thesis topic contains field for list of supervisors\\
-    This field contains the list of university supervisors, each supervisor is assigned a university that they supervise at. A thesis topic can have zero or more university supervisors.
+    \item Thesis topic contains field for the list of supervisors\\
+    This field contains the list of university supervisors, each supervisor is assigned a university that they supervise at. Thesis topic can have zero or more university supervisors.
 
-    \item Thesis topic contains field for list of types\\
-    This field contains the list of types (i.e. diploma, bachelor). A thesis topic can have zero or more types.
+    \item Thesis topic contains field for the list of types\\
+    This field contains the list of types (i.e. diploma, bachelor). Thesis topic can have zero or more types.
 
     \item Application management\\
     The system allows to CRUD applications.
@@ -47,7 +50,8 @@ In the following text, the author will describe the architecture and design of t
     \item Students can apply for a thesis topic\\
     The applicant chooses the type and the university that they apply to.
 
-    \item Application can be approved
+    \item Applications can be approved\\
+    To approve an application, the owner or a supervisor must create a new thesis.
 
     \item Thesis topic can be enabled or disabled
 
@@ -55,10 +59,10 @@ In the following text, the author will describe the architecture and design of t
     The system allows to filter thesis topics by university, type, owner or title.
 
     \item Thesis management\\
-    The system allows to CRUD theses. A thesis contains fields title, description, thesis topic, assignee, supervisor, abstract, type and university.
+    The system allows to CRUD theses. Thesis contains fields title, description, thesis topic, assignee, supervisor, abstract, type and university.
 
-    \item Tags can be assigned to a thesis\\
-    There can be zero or more tags assigned to a topic.
+    \item Tags can be assigned to theses\\
+    There can be zero or more tags assigned to one thesis.
 
     \item Thesis contains field status\\
     Status can be either `in progress', `finished', `failed' or `postponed'.
@@ -68,10 +72,12 @@ In the following text, the author will describe the architecture and design of t
 
     \item Supervisor can select universities they supervise at for each thesis topic
 
-    \item Authenticated user can subscribe for a thesis topic or a thesis\\
+    \item Supervisor can add private notes to theses
+
+    \item Authenticated user can subscribe for thesis topics and theses\\
     The system sends notifications to all subscribers of a thesis topic or a thesis when a change is made to it.
 
-    \item Authenticated user can unsubscribe from a thesis topic or a thesis
+    \item Authenticated user can unsubscribe from thesis topics and theses
 
     \item Theses can be filtered\\
     The system allows to filter theses by title, supervisor, assignee, status, grade, type or university.
@@ -80,13 +86,13 @@ In the following text, the author will describe the architecture and design of t
     The system allows to list theses or thesis topics that contains a particular tag.
 
     \item File management for theses\\
-    The system allows to upload files to a thesis.
+    The system allows to upload files to theses.
 
     \item Discussion for thesis topics and theses\\
-    A logged in user can comment on thesis topics and theses.
+    Logged in users can comment on thesis topics and theses.
 
     \item Private comments\\
-    Comments that are not visible to students can be created.
+    Users with certain authority can create comments that are not visible to students and guests.
 
     \item Full text search\\
     Theses and thesis topics can be searched by a full text search engine.
@@ -95,8 +101,6 @@ In the following text, the author will describe the architecture and design of t
     The system allows to CRUD Frequently Asked Questions. One frequently asked question contains fields question, answer and locale.
 
 \end{enumerate}
-
-\newpage
 
 \subsection{Use Case Diagram}
 
@@ -168,11 +172,99 @@ To fulfill the first three functional requirements, we need to register users. F
 
 \begin{figure}[h]
     \centering
-        \includegraphics[trim=0 675 250 30, clip, keepaspectratio]{./images/domain-user-entity.pdf}
-    \caption{\texttt{User} entity model}
+        \includegraphics[trim=0 675 480 30, clip, keepaspectratio, scale=0.8]{./images/domain-user-entity.pdf}
+    \caption{Model of \texttt{User} entity}
     \label{fig:domain-user-entity}
 \end{figure}
 
 \subsubsection{\texttt{University} entity}
 
-\faketext[24]
+The only field the \texttt{University} entity requires is \texttt{name}, see figure \ref{fig:domain-university-entity}.
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 770 510 30, clip, keepaspectratio]{./images/domain-university-entity.pdf}
+    \caption{Model of \texttt{University} entity}
+    \label{fig:domain-university-entity}
+\end{figure}
+
+\subsubsection{\texttt{Article}, \texttt{Comment} and \texttt{Subscription} entities}
+
+Subscription is just an association entity but for the sake of future improvements
+
+\faketext[4]
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 620 180 30, clip, keepaspectratio, width=\textwidth]{./images/domain-article-comment-subscription-entities.pdf}
+    \caption{Model of \texttt{Article}, \texttt{Comment} and \texttt{Subscription} entities}
+    \label{fig:domain-article-comment-subscription-entities}
+\end{figure}
+
+\subsubsection{\texttt{Tag} entity}
+
+Lorem ipsum. This allows as to agregate...
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 770 510 30, clip, keepaspectratio]{./images/domain-tag-entity.pdf}
+    \caption{Model of \texttt{Tag} entity}
+    \label{fig:domain-tag-entity}
+\end{figure}
+
+\subsubsection{\texttt{Topic}, \texttt{Category} and \texttt{Supervision} entitites}
+
+\faketext[5]
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 510 120 30, clip, keepaspectratio, width=\textwidth]{./images/domain-topic-category-supervision-entities.pdf}
+    \caption{Model of \texttt{Topic}, \texttt{Category} and \texttt{Supervision} entities}
+    \label{fig:domain-topic-category-supervision-entities}
+\end{figure}
+
+\subsubsection{\texttt{Thesis} entity}
+
+\faketext[3]
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 600 190 30, clip, keepaspectratio, width=\textwidth]{./images/domain-thesis-entity.pdf}
+    \caption{Model of \texttt{Thesis} entity}
+    \label{fig:domain-thesis-entity}
+\end{figure}
+
+\subsubsection{\texttt{Application} entity}
+
+\faketext[1]
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=10 630 200 30, clip, keepaspectratio, width=\textwidth]{./images/domain-application-entity.pdf}
+    \caption{Model of \texttt{Application} entity}
+    \label{fig:domain-application-entity}
+\end{figure}
+
+\subsubsection{\texttt{Feed} and \texttt{Notification} entities}
+
+\faketext[2]
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 720 170 30, clip, keepaspectratio, width=\textwidth]{./images/domain-feed-notification-entities.pdf}
+    \caption{Model of \texttt{Feed} and \texttt{Notification} entities}
+    \label{fig:domain-feed-notification-entities}
+\end{figure}
+
+\subsubsection{\texttt{Faq} entity}
+
+\faketext[1]
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 740 510 30, clip, keepaspectratio]{./images/domain-faq-entity.pdf}
+    \caption{Model of \texttt{Faq} entity}
+    \label{fig:domain-faq-entity}
+\end{figure}
+
+\faketext[2]
