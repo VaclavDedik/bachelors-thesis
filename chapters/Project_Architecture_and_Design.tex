@@ -2,7 +2,7 @@
 
 In the following text, the author will describe the architecture and design of the Thesis Management System including functional and non-functional requirements of the client.
 
-\section{Functional requirements}
+\section{Functional Requirements}
 
 \begin{enumerate}
     \item User management\\
@@ -10,6 +10,9 @@ In the following text, the author will describe the architecture and design of t
 
     \item Registration\\
     An anonymous user can sign up.
+
+    \item Log In\\
+    An anonymous user can sign in using email and password.
 
     \item Thesis topic management\\
     The system allows to create, read, update and delete (CRUD) a thesis topic. A topic contains fields title and description in two languages.
@@ -63,6 +66,13 @@ In the following text, the author will describe the architecture and design of t
     \item Thesis contains field grade\\
     One of A, B, C, D, E or F.
 
+    \item Supervisor can select universities they supervise at for each thesis topic
+
+    \item Authenticated user can subscribe for a thesis topic or a thesis\\
+    The system sends notifications to all subscribers of a thesis topic or a thesis when a change is made to it.
+
+    \item Authenticated user can unsubscribe from a thesis topic or a thesis
+
     \item Theses can be filtered\\
     The system allows to filter theses by title, supervisor, assignee, status, grade, type or university.
 
@@ -88,15 +98,16 @@ In the following text, the author will describe the architecture and design of t
 
 \newpage
 
-\subsection{Use case diagram}
+\subsection{Use Case Diagram}
 
 \begin{figure}[H]
     \centering
-        \includegraphics[trim=0 250 10 30, clip, keepaspectratio, width=\textwidth]{./images/use-case.pdf}
+        \includegraphics[trim=0 190 10 30, clip, keepaspectratio, width=\textwidth]{./images/use-case.pdf}
     \caption{Use case diagram of the Thesis Management System}
+    \label{fig:use-case}
 \end{figure}
 
-\section{Non-functional requirements}
+\section{Non-Functional Requirements}
 
 \begin{enumerate}
     \item Grails platform\\
@@ -120,8 +131,48 @@ In the following text, the author will describe the architecture and design of t
     \item Internationalization and localization\\
     The system is internationalized and localized in English and Czech.
 
+    \item Software development methodology\\
+    The system is developed iteratively and incrementally.
+
 \end{enumerate}
 
-\section{Domain model}
+\section{Domain Model}
 
-\faketext[30]
+Designing the domain model is the most important step when designing an information system. It is also the most difficult one, because you usually cannot easily make changes in the domain model after you implemented the application logic around it. You can, however, add some domain model elements that the already-designed elements do not relate to. For example, if you design an entity \texttt{User}, you can implement it and easily add new entity \texttt{Group} later on if the \texttt{Group} is the owner of the relationship, see fig. \ref{fig:user-group-owner-example}. If the \texttt{User} is the owner of the relationship (see fig. \ref{fig:user-owner-group-example}), more refactoring is required to implement such changes (especially in case of object composition), because the fundamental API of the implemented part of the system changed.
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 740 290 30, clip, keepaspectratio]{./images/user-group-owner-example.pdf}
+    \caption{Example of domain model where \texttt{Group} owns the relationship}
+    \label{fig:user-group-owner-example}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 740 290 30, clip, keepaspectratio]{./images/user-owner-group-example.pdf}
+    \caption{Example of domain model where \texttt{User} owns the relationship and composition is introduced}
+    \label{fig:user-owner-group-example}
+\end{figure}
+
+Even more difficult can be deleting or editing attributes of an implemented entity. As a lot of refactoring is necessary to cope with such changes, a lot of new bugs is usually introduced, so it is best to avoid such changes by designing the domain model thoroughly.
+
+Note that it is necessary to change the domain model if you implement your application incrementally. You should, however, try to minimize changes that require the API of the implemented domain model to be changed.
+
+\subsection{Domain Model of the Thesis Management System}
+
+As the domain model of the Thesis Management System is very complex, the author will describe it part by part.
+
+\subsubsection{\texttt{User} entity}
+
+To fulfill the first three functional requirements, we need to register users. For that reason, we introduce entity \texttt{User} with fields \texttt{email} and \texttt{password} that serve as log in credentials and field \texttt{fullName}. We also need fields \texttt{accountLocked} to allow the administrator to lock a user account and \texttt{enabled} for registration confirmation purposes. Field \texttt{sendMail} represents user setting that allows them to disable receiving notifications by email and field \texttt{dateCreated} represents the date of registration. To implement authorization, the \texttt{User} entity needs field \texttt{roles} which contains list of user's authorities. An authority is represented by enumeration \texttt{Role}. Figure \ref{fig:domain-user-entity} illustrates the described model.
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 675 250 30, clip, keepaspectratio]{./images/domain-user-entity.pdf}
+    \caption{\texttt{User} entity model}
+    \label{fig:domain-user-entity}
+\end{figure}
+
+\subsubsection{\texttt{University} entity}
+
+\faketext[24]
