@@ -168,7 +168,7 @@ As the domain model of the Thesis Management System is very complex, the author 
 
 \subsubsection{\texttt{User} entity}
 
-To fulfill the first three functional requirements, we need to register users. For that reason, we introduce entity \texttt{User} with fields \texttt{email} and \texttt{password} that serve as log in credentials and field \texttt{fullName}. We also need fields \texttt{accountLocked} to allow the administrator to lock a user account and \texttt{enabled} for registration confirmation purposes. Field \texttt{sendMail} represents user setting that allows them to disable receiving notifications by email and field \texttt{dateCreated} represents the date of registration. To implement authorization, the \texttt{User} entity needs field \texttt{roles} which contains list of user's authorities. An authority is represented by enumeration \texttt{Role}. Figure \ref{fig:domain-user-entity} illustrates the described model.
+To fulfill the first three functional requirements, we need to register users. For that reason, we introduce entity \texttt{User} with fields \texttt{email} and \texttt{password} that serve as log in credentials and field \texttt{fullName}. We also need fields \texttt{accountLocked} to allow the administrator to lock a user account and \texttt{enabled} for registration confirmation purposes. Field \texttt{sendMail} represents user setting that allows them to disable receiving notifications by email and field \texttt{dateCreated} represents the date of registration. To implement authorization, the \texttt{User} entity needs field \texttt{roles} which contains list of user's authorities. Figure \ref{fig:domain-user-entity} illustrates the described model.
 
 \begin{figure}[h]
     \centering
@@ -179,7 +179,7 @@ To fulfill the first three functional requirements, we need to register users. F
 
 \subsubsection{\texttt{University} entity}
 
-The only field the \texttt{University} entity requires is \texttt{name}, see figure \ref{fig:domain-university-entity}.
+To be able to keep a record of universities that a thesis topic is offered to, we need the entity \texttt{University} with only one field -- \texttt{name}, see Figure \ref{fig:domain-university-entity}.
 
 \begin{figure}[h]
     \centering
@@ -190,9 +190,21 @@ The only field the \texttt{University} entity requires is \texttt{name}, see fig
 
 \subsubsection{\texttt{Article}, \texttt{Comment} and \texttt{Subscription} entities}
 
-Subscription is just an association entity but for the sake of future improvements
+To allow users to add comments to thesis topics and theses, we need an entity that represents comments. The name of the entity is, for obvious reasons, \texttt{Comment} and fields that the entity requires are:
 
-\faketext[4]
+\begin{itemize}
+    \item \texttt{content} -- represents the content of the comment
+    \item \texttt{privateComment} -- mark if the comment is private
+    \item \texttt{dateCreated} -- the date of creation, this field is used for sorting the comments so that we could show the user comments in either descending or ascending order
+\end{itemize}
+
+There are two association we need to create for \texttt{Comment}. First is a many-to-one association between \texttt{Comment} and \texttt{User} to be able to display the author of a comment. Second is a bit more complicated because there are two approaches to associate comments with thesis topics and theses. We could either create a many-to-one association between entities \texttt{Comment} and \texttt{Topic} and between entities \texttt{Comment} and \texttt{Thesis} or we could use generalization and move the many-to-one association up from \texttt{Thesis} and \texttt{Topic} to their parent. We choose the later approach because it allows us to create another ``commentable'' entity in the future simply by making it another child of the parent entity.
+
+The \texttt{Article} entity represents the parent entity described above. We place the field \texttt{title} on it for reasons depicted in the following text.
+
+The \texttt{Subscription} is only an association entity with no attributes on it but for the sake of future improvements, we model it separately. We could, for example, allow users to choose if they want to receive email notification for a particular subscription or let them set up what changes to an \texttt{Article} they want to be notified about. As far as associating the entity with other entities is concerned, it is very similar to the \texttt{Comment} entity because we need to implement subscription functionality for both topics and theses. We add the field \texttt{title} on the \texttt{Article} entity because we want to show subscribers the name of the \texttt{Article} that changed.
+
+Described model is illustrated in Figure \ref{fig:domain-article-comment-subscription-entities}.
 
 \begin{figure}[h]
     \centering
@@ -201,9 +213,26 @@ Subscription is just an association entity but for the sake of future improvemen
     \label{fig:domain-article-comment-subscription-entities}
 \end{figure}
 
+\subsubsection{\texttt{Feed} and \texttt{Notification} entities}
+
+Entities \texttt{Feed} and \texttt{Notification} are quite closely related to the \texttt{Subscription} entity even though they are not directly associated. When a change is made to a topic or a thesis, the subscribers are notified by email and by a notification within the system. Emails are stored by the email hostings but the notifications need to be stored in the database of the Thesis Management System because they must be available to users when they visit the system.
+
+Now, there are several ways how to implement such functionality but the most notable are the following two. The first approach is to create a \texttt{Notification} entity with fields including \texttt{message} that represents the content of the notification and associate it with the \texttt{User} entity that represents the subscriber. This approach is favorable because it is simple, however, it creates unnecessary redundancy in the database as a new notification with the same \texttt{message} is created for every subscriber. The second approach, which is used in the Thesis Management System, is to create another entity \texttt{Feed} and move the \texttt{message} field onto it. The later approach is also more suitable if we want to show the user a notification according to their locale setting. 
+
+Figure \ref{fig:domain-feed-notification-entities} illustrates the model of this part of the system. Since we want the notifications to be localized, the \texttt{Feed} entity has fields \texttt{messageCode}, which represents the code of the massage to be displayed as a notification, \texttt{args}, which represents the arguments of the message and \texttt{dateCreated}, which allows us to sort the notifications to show users the latest notifications first. The \texttt{Feed} entity is also associated with the \texttt{User} entity which represents the user who triggered the creation of the feed. This allows us to find user's activity.
+
+The \texttt{Notification} entity is basically an association entity between entities \texttt{User} and \texttt{Feed}. The field \texttt{seen} represents status of a notification, i.e. if the user has already seen the notification or not.
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 720 170 30, clip, keepaspectratio, width=\textwidth]{./images/domain-feed-notification-entities.pdf}
+    \caption{Model of \texttt{Feed} and \texttt{Notification} entities}
+    \label{fig:domain-feed-notification-entities}
+\end{figure}
+
 \subsubsection{\texttt{Tag} entity}
 
-Lorem ipsum. This allows as to agregate...
+The most common way of implementing tags in an information system is to place collection of simple strings in an entity. We chose a different approach for the Thesis Management System, though. We introduced a separate entity \texttt{Tag} that contains a simple field \texttt{title}. Making the \texttt{Tag} entity separate makes it easy to add new fields on it in the future, e.g. \texttt{description}, and it is easier to aggregate, for example, number of all tags used in the system. Figure \ref{fig:domain-tag-entity} depicts the model.
 
 \begin{figure}[h]
     \centering
@@ -214,7 +243,7 @@ Lorem ipsum. This allows as to agregate...
 
 \subsubsection{\texttt{Topic}, \texttt{Category} and \texttt{Supervision} entitites}
 
-\faketext[5]
+\faketext[4]
 
 \begin{figure}[h]
     \centering
@@ -243,17 +272,6 @@ Lorem ipsum. This allows as to agregate...
         \includegraphics[trim=10 630 200 30, clip, keepaspectratio, width=\textwidth]{./images/domain-application-entity.pdf}
     \caption{Model of \texttt{Application} entity}
     \label{fig:domain-application-entity}
-\end{figure}
-
-\subsubsection{\texttt{Feed} and \texttt{Notification} entities}
-
-\faketext[2]
-
-\begin{figure}[h]
-    \centering
-        \includegraphics[trim=0 720 170 30, clip, keepaspectratio, width=\textwidth]{./images/domain-feed-notification-entities.pdf}
-    \caption{Model of \texttt{Feed} and \texttt{Notification} entities}
-    \label{fig:domain-feed-notification-entities}
 \end{figure}
 
 \subsubsection{\texttt{Faq} entity}
