@@ -243,7 +243,25 @@ The most common way of implementing tags in an information system is to place co
 
 \subsubsection{\texttt{Topic}, \texttt{Category} and \texttt{Supervision} entitites}
 
-\faketext[4]
+\texttt{Topic} is the most important entity in the system because it represents the topic of a thesis. It is a child entity of the \texttt{Article} entity which means that the \texttt{title} field is included in the \texttt{Topic} entity automatically. Description of the other fields follows:
+
+\begin{itemize}
+    \item \texttt{secondaryTitle} -- Represents the title of the topic in a different language (e.g. Czech, Slovak).
+    \item \texttt{lead} -- Lead paragraph, is displayed on the page with the list of topics.
+    \item \texttt{Description} -- Description of the topic.
+    \item \texttt{secondaryDescription} -- Represents the description of the topic in a different language.
+    \item \texttt{dateCreated} -- The date of creation of the topic.
+    \item \texttt{enabled} -- Flag which marks a topic that is enabled or disabled, i.e. students can(not) apply for it.
+    \item \texttt{types} -- Collection of types of the topic (e.g. bachelor, diploma).
+\end{itemize}
+
+The \texttt{Topic} entity also has a many-to-many association with the \texttt{Tag} entity and the \texttt{User} entity which represents the owner of the topic, i.e. the user which created the topic and is in charge of it. The association with the \texttt{University} entity is necessary to keep a record of universities that the topic is offered to, i.e. students of what universities can apply for it.
+
+Another requirement of the system is to place topics in categories. Categories are represented by the \texttt{Category} entity which has only two fields -- the \texttt{name} field which represents the name of the category and the \texttt{description} field which is self-explanatory. The \texttt{Topic} entity is associated with the \texttt{Category} entity in a many-to-many manner. In the first stages of the design, we expected the categories to be hierarchical, i.e. a category could have several subcategories, but we decided to abolish such approach as it would place unnecessary overhead on the database.
+
+The most difficult part of the system was to design the requirement allowing topics to list university supervisors. There are zero or more supervisors in one topic but one supervisor can supervise a topic at multiple universities which means that the supervisors cannot be associated with the \texttt{Topic} entity directly. Instead, we introduced the \texttt{Supervision} entity which is basically an association entity without any fields representing a supervisor associated with a university.
+
+Described design is depicted in Figure \ref{fig:domain-topic-category-supervision-entities}.
 
 \begin{figure}[h]
     \centering
@@ -254,7 +272,31 @@ The most common way of implementing tags in an information system is to place co
 
 \subsubsection{\texttt{Thesis} entity}
 
-\faketext[3]
+The second most important entity of the system is the \texttt{Thesis} entity, it represents an academic project of a student and it is associated with the \texttt{Topic} entity. There can be multiple theses created from one topic for several reasons:
+
+\begin{itemize}
+    \item One topic can be intended for several students (for example when the topic is too difficult for one student) which means that a thesis for each student needs to be created.
+    \item The topic is offered in more than one semester.
+    \item The student that was assigned to the thesis of a topic failed to finish with a satisfactory result and the topic has to be offered again.
+\end{itemize}
+
+This means that the cardinality of the association with the \texttt{Topic} entity must be a many-to-one one.
+
+The \texttt{Thesis} entity is, as well as the \texttt{Topic} entity, a child of the \texttt{Article} entity which takes care of the title, comments and subscriptions. Theses are not required to be stored in two languages which means that there is no need for both the secondary title and the secondary description. There are several other fields required, though:
+
+\begin{itemize}
+    \item \texttt{description} -- Represents the official description of the thesis.
+    \item \texttt{status} -- Status of the thesis which can be either `in progress', `finished', `failed' or `postponed'.
+    \item \texttt{grade} -- If the thesis is finished, a grade must be awarded. The grade can be one of the following: A, B, C, D, E, F.
+    \item \texttt{abstract} -- The abstract of the thesis provided by the assigned student.
+    \item \texttt{dateCreated} -- The date of creation of the thesis.
+    \item \texttt{type} -- The type of the thesis which can be for example `bachelor' or `diploma'.
+    \item \texttt{notes} -- A field for the supervisor where they can leave notes related to the thesis.
+\end{itemize}
+
+The student that is assigned to a thesis and the supervisor are represented by the associations with the \texttt{User} entity and the thesis university is represented by the one with the \texttt{University} entity. The tags of a thesis are designed the same way as with the \texttt{Topic} entity. The reason why the association with the \texttt{Tag} entity is not moved up to the \texttt{Article} entity is because in the future, there might be added a functionality for management of school projects that does not require tags but requires the functionality provided by the \texttt{Article} entity.
+
+Figure \ref{fig:domain-thesis-entity} illustrates this model.
 
 \begin{figure}[h]
     \centering
@@ -265,7 +307,7 @@ The most common way of implementing tags in an information system is to place co
 
 \subsubsection{\texttt{Application} entity}
 
-\faketext[1]
+When a student applies for a topic, an application must be created to allow the owner or a supervisor of the topic to review and possibly approve it. To apply for a topic, a student must choose the type and the university for which they apply. The type is stored in the \texttt{type} field and the university is represented by the association with the \texttt{University} entity. The student can also leave a note, e.g. the preferred supervisor, which is stored in the \texttt{note} field. The \texttt{dateCreated} field allows the authority (owner or supervisor) to see which application was created first and the \texttt{approved} field marks applications that are already approved. The association with the \texttt{User} resp. \texttt{Topic} entity represents the student who applied for the topic resp. the topic that the application is created for. The association with the \texttt{Thesis} entity allows us to display the thesis that was created from an application. Note that this association has 0..1 multiplicity (in both directions). This is because when a student applies for a topic, the thesis is not created yet. The multiplicity from the other direction results from the fact that a thesis can be created directly from a topic (i.e. no application is created). This model is depicted in Figure \ref{fig:domain-application-entity}.
 
 \begin{figure}[h]
     \centering
@@ -276,7 +318,15 @@ The most common way of implementing tags in an information system is to place co
 
 \subsubsection{\texttt{Faq} entity}
 
-\faketext[1]
+To allow new users to adapt to a new system more quickly, Frequently Asked Questions are introduced. The FAQ are represented by the \texttt{Faq} entity with the following fields:
+
+\begin{itemize}
+    \item \texttt{question} -- The question to be answered.
+    \item \texttt{answer} -- The answer to the frequently asked question.
+    \item \texttt{locale} -- The locale of the group of users for which the frequently asked question is displayed.
+\end{itemize}
+
+See figure \ref{fig:domain-faq-entity} to see the designed model.
 
 \begin{figure}[h]
     \centering
@@ -284,5 +334,3 @@ The most common way of implementing tags in an information system is to place co
     \caption{Model of \texttt{Faq} entity}
     \label{fig:domain-faq-entity}
 \end{figure}
-
-\faketext[2]
