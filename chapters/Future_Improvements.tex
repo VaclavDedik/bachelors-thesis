@@ -1,3 +1,31 @@
 \chapter{Future Improvements}
 
-\faketext[10]
+Overall, the Thesis Management System is a rather large project and as it is only a bachelor thesis divided to three students, there are many features that could be implemented in the future. In this chapter, the author will investigate such possible features and describe them accordingly.
+
+\section{Integration with Universities}
+
+The most useful feature would be the integration of the Thesis Management System with the information systems of universities of which Red Hat is industrial partner. This would cause all changes done in the Thesis Management System to be automatically reflected in the university information systems. 
+
+There are two ways this feature could be implemented. The first approach is to use the API of the universities which means to implement the integration with each university separately. This is obviously very expensive and hard to maintain, but the advantage is that there is little activity required from the universities. The second approach is to standardize and implement an API in the Thesis Management System and leave the integration to the universities. The API could follow, for example, the REST\footnote{Representational State Transfer} architecture model. The obvious disadvantage of this approach is that it could be complicated to convince the universities to do their part of implementation -- which is because it could require them to do a lot of work as each university uses a different information system based on a different design model. 
+
+If this feature were implemented, it would remove a substantial amount of logistics from the shoulders of both the universities and Red Hat, the author cannot, however, see it implemented in any other way than the later one.
+
+\section{BPM and BRMS}
+
+When a students works on a thesis, their supervisor usually requires them to follow a certain workflow and certain rules. This feature can be achieved by integrating the Thesis Management System with a BPM\footnote{Business Process Management} and/or a BRMS\footnote{Business Rule Management System} tool. There is a variety of BPM tools, the most considered one for our project is jBPM because it is a JBoss project and as such it is supported by Red Hat. jBPM is a light-weight, extensible workflow engine written in pure Java that allows you to execute business processes using the latest BPMN 2.0 specification\cite{jbpm-homepage}. For the business rule management, the Drools framework would probably be chosen as it is also supported by Red Hat. 
+
+It is not yet clear how the integration would be done, but as such feature would help both supervisors and students to successfully meet all requirements of their thesis, it is definitely one of the most considered one.
+
+\section{School Projects Management}
+
+Red Hat not only offers thesis topics to universities, but also school projects for subjects taught there. Implementation of such functionality would allow the lecturers to take advantage of the features implemented in the Thesis Management System.
+
+To implement the project management, it would only require a new domain entity to be introduced, but how it should be integrated is not clear at the moment. It could be, as well as theses, associated with the \texttt{Topic} entity and a project would represent the concrete work of a student (or students). Another approach could be to implement project as a standalone unit which would represent both the topic and the students' work. The former approach would present a problem with the \texttt{Topic} entity as it does not allow to persist the number of students that can apply for it. But that could be addressed by creating a child entity that would allow such functionality. The later approach, on the other hand, forces the lecturers to create new projects every semester because a project also represents the topic and is closed at the end of each semester.
+
+To choose the approach, elaboration with the client (Red Hat) and end users would be required. It is, however, a feature worth the effort as it would push the use case of the Thesis Management System much further.
+
+\section{Import and Export of Theses and Thesis Topics}
+
+One user of the Thesis Management System raised a feature request for the import and export of theses and theses topics in various formats. If it was the only way, apart from coping it field by field, it would allow authorized users to easily import the theses and topics into another system.
+
+Implementation of such feature would be rather simple for possibly any format, because it only requires to create a template with values put in it, which is why it is placed quite near to the top of the TODO list.
