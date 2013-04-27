@@ -14,13 +14,13 @@ Groovy is a dynamic object-oriented programming language for the Java platform a
     \item Null safe operator, Elvis operator
 \end{itemize}
 
-As Groovy features a dynamic type system, it makes the code more readable and less verbose, however, as the type checks happens at run time rather than at compile time, the code is more error-prone since a type error is not thrown until the user accesses the affected code.
+As Groovy features a dynamic type system, it makes the code more readable and less verbose, however, as the type checks happens at run time rather than at compile time, the code is more error-prone since a type error is not thrown until the user accesses the affected code\cite{groovy-in-action}.
 
 Groovy is the principal programming language that is used for the implementation of the Thesis Management System since the Grails platform is based on it.
 
 \section{Grails}
 
-``Grails is an Open Source, full stack, web application framework for the Java Virtual Machine. It takes advantage of the Groovy programming language and convention over configuration to provide a productive and stream-lined development experience.''\cite{grails-homepage}. It is a well documented, easy to use and easily extensible platform that is designed according to the MVC\footnote{Model--view--controller} paradigm, which divides the application into three components that interact with each other greatly improving the project code's readability and maintainability. The Grails framework uses several well-known Java technologies under the hood, including:
+``Grails is an Open Source, full stack, web application framework for the Java Virtual Machine. It takes advantage of the Groovy programming language and convention over configuration to provide a productive and stream-lined development experience.''\cite{grails-homepage}. It is a well documented\cite{grails-documentation}, easy to use and easily extensible platform that is designed according to the MVC\footnote{Model--view--controller} paradigm, which divides the application into three components that interact with each other greatly improving the project code's readability and maintainability. The Grails framework uses several well-known Java technologies under the hood, including:
 
 \begin{description}
     \item[Hibernate] -- ORM\footnote{Object-relational mapping -- technique for converting objects into relational database compatible data} framework that is used as layer for data access, Grails wraps its API with Groovy making it much easier to configure and use.
@@ -32,7 +32,7 @@ To start with Grails, all you need to do is download and install the Grails dist
 
 \section{Git and GitHub}
 
-It is nearly impossible to develop a project as big as the Thesis Management System without a version control, therefore you usually need to choose a version control system. There are a lot of options you can choose from including Subversion, Mercurial or CVS. Git is, however, undoubtedly one of the best options as it is the most popular, flexible and scalable VCS\footnote{Version control system} there is. It is designed and developed by Linus Torvalds, a principal software developer of the Linux kernel, and it features very fast branching, decentralized system and a lot of useful commands like \texttt{rebase} or \texttt{squash}.
+It is nearly impossible to develop a project as big as the Thesis Management System without a version control, therefore you usually need to choose a version control system. There are a lot of options you can choose from including Subversion, Mercurial or CVS. Git is, however, undoubtedly one of the best options as it is the most popular, flexible and scalable VCS\footnote{Version control system} there is. It is designed and developed by Linus Torvalds, a principal software developer of the Linux kernel, and it features very fast branching, decentralized system and a lot of useful commands like \texttt{rebase} or \texttt{squash}\cite{git-homepage}\cite{pro-git}.
 
 GitHub is a source code hosting for projects that use Git as a version control tool. It is free (unless you need a private repository), easy to use web service and with features like forking and code reviewing, it is the most popular code host on the planet\cite{github-features}.
 
