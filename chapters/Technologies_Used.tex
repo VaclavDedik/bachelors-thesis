@@ -28,11 +28,23 @@ Groovy is the principal programming language that is used for the implementation
     \item[SiteMesh] -- Web application template framework which follows the decorator design pattern, Grails uses it for GSP\footnote{Groovy Server Pages} views.
 \end{description}
 
+Grails was chosen for the implementation of the Thesis Management System mainly because the project is for JBoss division of Red Hat -- and thanks to Java it is easy to run on any Java application server (e.g. JBoss Application Server), and since it is based on famous Java and JBoss technologies, it is easier to maintain. 
+
 To start with Grails, all you need to do is download and install the Grails distribution and then execute command \texttt{grails create-app [name]}, which creates the directory structure and default configuration of your application. You can then write your domain model and, thanks to grails feature called \emph{Scaffolding}, auto-generate the controllers and views for a particular domain class. To start the application, you simply execute \texttt{grails run-app} and the application is launched in development environment on Tomcat 7 servlet container. This experience makes first steps with Grails very easy and fun, the only caveat is that the auto-generated code needs a lot of polishing to improve its readability.
 
 \section{Git and GitHub}
 
-It is nearly impossible to develop a project as big as the Thesis Management System without a version control, therefore you usually need to choose a version control system. There are a lot of options you can choose from including Subversion, Mercurial or CVS. Git is, however, undoubtedly one of the best options as it is the most popular, flexible and scalable VCS\footnote{Version control system} there is. It is designed and developed by Linus Torvalds, a principal software developer of the Linux kernel, and it features very fast branching, decentralized system and a lot of useful commands like \texttt{rebase} or \texttt{squash}\,\cite{git-homepage}\,\cite{pro-git}.
+It is nearly impossible to develop a project as big as the Thesis Management System without a version control, therefore you usually need to choose a version control system. There are a lot of options you can choose from including Subversion, Mercurial or CVS. Git is, however, undoubtedly one of the best options as it is the most popular, flexible and scalable VCS\footnote{Version control system} there is. It is designed and developed by Linus Torvalds, a principal software developer of the Linux kernel, and the features include very fast branching and a lot of useful commands like \texttt{rebase} or \texttt{squash}\,\cite{git-homepage}\cite{pro-git}. 
+
+Git is also in comparison with e.g. Subversion decentralized (all repositories are equal), which results in the following properties:
+
+\begin{itemize}
+    \item You can create as many repositories as you want. This means you can for example create a hierarchy of repositories each for a different aspect of the project.
+    \item Most operations are fast because no network is involved due to all commits being stored locally. 
+    \item If you want, you can synchronize your commits with another repository with commands \texttt{push} and \texttt{pull}. 
+    \item Allows users to work on complex features without the need to publish it right away.
+    \item No need to worry about system failure in the ``central'' repository, there are many distributed copies.
+\end{itemize}
 
 GitHub is a source code hosting for projects that use Git as a version control tool. It is free (unless you need a private repository), easy to use web service and with features like forking and code reviewing, it is the most popular code host on the planet\,\cite{github-features}.
 
@@ -51,7 +63,7 @@ One of the most convincing features of relational databases is transaction suppo
     \item[Durability] -- When a transaction is finished, all data is saved permanently even if the system, for example, crashes.
 \end{description}
 
-There are a lot of relational databases, the most popular are MySQL, SQLite and PostgreSQL, which is the one we chose for the Thesis Management System. This database offers everything most applications require and is easy to configure with a great support.
+There are a lot of relational databases, the most popular are MySQL, SQLite and PostgreSQL. OpenShift only supports MySQL and PostgreSQL. PostgreSQL is believed to be more mature and more scalable\,\cite{mysql-vs-psql}, but for most applications either choice is a good one. For the Thesis Management System, we chose PostgreSQL because is easy to configure, and it has great documentation and support.
 
 \section{MongoDB}
 
@@ -71,6 +83,8 @@ Where the \texttt{<query>} argument corresponds to the \texttt{WHERE} statement 
 
 There are some drawbacks a newcomer from RDBMS must consider, though. If you choose MongoDB for a project, you must manage transactions in your application logic, because MongoDB does not support them. And write operations are atomic only on the level of a single document. You cannot count on integrity constraints either, because MongoDB does not have any apart from the very basic ones. All these drawbacks can be mitigated by a good framework but it is recommended to consider the choice of a database storage carefully.
 
+We use MongoDB in the Thesis Management System because we need to store some dynamic data (i.e. data that changes schema) and we also use it to store files.
+
 \section{OpenShift}
 
 OpenShift is Red Hat's Cloud Computing \emph{Platform as a Service} offering\,\cite{openshift-homepage}. Platform as a Service (PaaS) offerings facilitate the deployment of web-based applications without the cost and complexity of buying servers and setting them up\,\cite{guardian-google-paas}. In short, this means that you can set up your production environment with all software needed (database, application server) in a matter of minutes and you can deploy your application by one command-line command.
@@ -86,6 +100,13 @@ Red Hat is an open-source company, i.e. every project developed by Red Hat is op
 
 Creating your first application on OpenShift is very straightforward. First, you choose a type of application, which is called a cartridge in OpenShift terminology. You can choose from a variety of cartridges including, for example, JBoss Application Server, Tomcat 7, Ruby on Rails and Django, or you can choose the Do It Yourself cartridge and set up the whole environment yourself. Once you have done that, you choose a public URL, a source code repository, gears and scaling. A gear is a container with limited resources that runs your application, i.e. virtual server. By default, you can only choose the default small gear. If you pay a monthly fee, you can choose medium or large gear with more resources at your disposal. Scaling allows your application to be load-balanced, i.e. if your applications' traffic increases, OpenShift will allocate more gears. When you have your application created, you can do some basic configuration through the web interface or you can add another cartridge to your application, e.g. a database or Cron. If you need to connect to the server where your application runs, you can open a Secure Shell session (supposing you've set up your public RSA key). This overall flexibility decreases time spent managing software and hardware, and it makes it easy to deploy your application without any fuss, so at least from that point of view, it makes sense to use OpenShift even if you have no choice but to use the Do It Yourself cartridge.
 
+\begin{figure}[h]
+    \centering
+        \includegraphics[trim=0 480 0 30, clip, keepaspectratio, width=\textwidth]{./images/deployment-diagram.pdf}
+    \caption{Deployment diagram of the Thesis Management System}
+    \label{fig:deployment-diagram}
+\end{figure}
+
 If setting up a new OpenShift application is simple, deploying one is even more simple. You just push the application's source code to either the repository you specified or the repository that was created for you. You might need to set some properties in your application (e.g. database credentials), though. Fortunately, OpenShift exports all needed properties as environment variables so that you could access them via the API of your programming language and use them wherever necessary. If you need to inject or modify some environment variables at some point (e.g. before or after build), you can use action hooks. These lifecycle hooks allows you to execute any kind of shell script at a certain point in time, for example, you might want to append a property to the \texttt{JAVA\_OPTS} environment variable just before the build of your application. To do that, you put the following script in \texttt{\$\{project.dir\}/.openshift/action\_hooks/pre\_build}:
 
 \begin{verbatim}
@@ -95,9 +116,11 @@ export JAVA_OPTS="$JAVA_OPTS -DsomeProperty=true"
 
 The script above gets executed directly, so you can use PHP, Python, Ruby or any other interpreted programing language.
 
+The Thesis Management System is deployed on medium gear and it runs on JBoss EWS 2.0, which is a servlet container based on Tomcat 7. It also uses the PostgreSQL and MongoDB cartridges. Figure \ref{fig:deployment-diagram} illustrates the deployment configuration of the system.
+
 \section{Others}
 
-There are a lot of other technologies used for the implementation of the Thesis Management System, to keep it short, the author will describe them just briefly.
+There are a lot of other technologies used for the implementation of the Thesis Management System, to keep it short, they will be described just briefly, because some of them were not used by the author and other are not considered very relevant.
 
 \begin{description}
     \item[Spring Security] -- A Spring framework that provides authentication and authorization for Java.
