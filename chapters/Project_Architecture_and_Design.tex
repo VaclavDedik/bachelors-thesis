@@ -3,73 +3,35 @@
 In the following text, the author will describe the architecture and design of the Thesis Management System including functional and non-functional requirements, and the domain model. The author will also depict some design parts with UML\footnote{Unified Modeling Language} 2.0 diagrams that were modeled with Visual Paradigm tool\,\cite{visual-paradigm-homepage}, however, the UML diagrams are not to be regarded as blueprints of the system, but rather as sketches, and as such, some information that the author considers irrelevant or obvious are let out. This is allowed as stated by Martin Fowler in his book UML Distilled\,\cite{fowler-uml}.
 
 \section{Functional Requirements}
+\label{sec:func-requirements}
 
 \begin{enumerate}
     \item User management\\
     The system allows to create, read, update and delete (CRUD) users. User contains fields full name, email and password.
 
     \item Registration\\
-    Anonymous users can sign up only with emails hosted at configured domain addresses.
+    Only students can sign up.
 
     \item Log In\\
     Anonymous users can sign in using email and password.
 
-    \item Site configuration\\
-    Administrator can configure certain aspects of the system, like allowed email domain addresses, site announcement and the terms of use.
-
     \item Thesis topic management\\
-    The system allows to CRUD thesis topics. Topic contains fields title and description in two languages.
+    The system allows to CRUD thesis topics. Topic contains fields title and description in two languages and it is possible to assign the list of tags and categories to it. The management of the topic is done by its leader and the list of the universities that the topic is offered to is represented by the university list. There is also a field for the list of university supervisors, each supervisor is assigned a university that they supervise at. One topic can have zero or more university supervisors. Lastly, there is a field for the list of thesis types (which can contain e.g. diploma, bachelor) and a flag that represents enabled/disabled state of the topic to disallow students to create applications.
 
     \item Category management\\
     The system allows to CRUD categories. Category contains fields title and description.
 
-    \item Topic can be added to categories.\\
-    One topic can be added to one or more categories, which allows users to browse topics by categories.
-
-    \item Tags can be assigned to topics\\
-    There can be zero or more tags assigned to one topic.
-
-    \item Topic contains field for a leader\\
-    The leader of a topic has the authority to manage topics created by them.
-
     \item University management\\
     The system allows to CRUD universities. University contains a field for the name of the university.
-
-    \item Topic contains a field for the list of universities\\
-    This field contains the list of universities that a topic is offered to. One topic can be offered to one or more universities.
-
-    \item Topic contains a field for the list of supervisors\\
-    This field contains the list of university supervisors, each supervisor is assigned a university that they supervise at. One topic can have zero or more university supervisors.
-
-    \item Topic contains a field for the list of types\\
-    This field contains the list of thesis types (i.e. diploma, bachelor). Topic can have one or more types.
 
     \item Application management\\
     The system allows to CRUD applications.
 
-    \item Students can apply for topics\\
-    The applicant chooses the thesis type and the university that they apply to.
-
-    \item Applications can be approved\\
-    To approve an application, the leader or a supervisor must create a new thesis.
-
-    \item Topic can be enabled or disabled\\
-    When a topic is disabled, students cannot apply for it.
-
     \item Topics can be filtered\\
-    The system allows to filter topics by university, type, leader or title.
+    The system allows to filter topics by university, type, leader, title, tag or category.
 
     \item Thesis management\\
-    The system allows to CRUD theses. Thesis contains fields title, description, thesis topic, assignee, supervisor, abstract, type and university.
-
-    \item Tags can be assigned to theses\\
-    There can be zero or more tags assigned to one thesis.
-
-    \item Thesis contains a field for status\\
-    Status can be either `in progress', `finished', `failed' or `postponed'.
-
-    \item Thesis contains a field for grade\\
-    One of A, B, C, D, E or F.
+    The system allows to CRUD theses. Thesis contains fields title, description, thesis topic, assignee, supervisor, abstract, type, university and the list of tags. There is also a field for status that can be either `in progress', `finished', `failed' or `postponed' and a field for grade that can be one of A, B, C, D, E or F.
 
     \item Supervisors can select universities they supervise at for each topic
 
@@ -81,25 +43,19 @@ In the following text, the author will describe the architecture and design of t
     \item Authenticated user can unsubscribe from topics and theses
 
     \item Theses can be filtered\\
-    The system allows to filter theses by title, supervisor, assignee, status, grade, type or university.
-
-    \item Theses and topics can be filtered by tags\\
-    The system allows to list theses or topics that contain a particular tag.
+    The system allows to filter theses by title, supervisor, assignee, status, grade, type, university or tag.
 
     \item File management for theses\\
     The system allows to upload files to theses.
 
     \item Discussion for topics and theses\\
-    Logged in users can comment on topics and theses.
-
-    \item Private comments\\
-    Users with certain authority can create comments that are not visible to students and guests.
+    Logged in users can comment on topics and theses and users with certain authority (Administrators and Leaders) can create comments that are not visible to students and guests.
 
     \item Full text search\\
     Theses and topics can be searched by a full text search engine.
 
     \item Frequently Asked Questions (FAQ) management\\
-    The system allows to CRUD Frequently Asked Questions. One frequently asked question contains fields question, answer and locale.
+    The system allows to CRUD Frequently Asked Questions. One frequently asked question contains fields question and answer.
 
 \end{enumerate}
 
@@ -113,13 +69,14 @@ In the following text, the author will describe the architecture and design of t
 \end{figure}
 
 \section{Non-Functional Requirements}
+\label{sec:non-func-requirements}
 
 \begin{enumerate}
     \item Grails platform\\
     The system is implemented using platform Grails.
 
     \item Authentication and authorization\\
-    The system is secured and there are four roles -- \textbf{Administrator} that can manage users, categories, FAQ and universities, \textbf{Leader} that can create topics and manage topics created by them, \textbf{Supervisor} that can create theses and manage theses created by them and \textbf{Student} that can apply for topics.
+    The system is secured and there are roles each with certain privileges.
 
     \item Performance\\
     The system offers reasonable performance at least up to five hundred created topics, theses, users and universities.
@@ -164,6 +121,7 @@ Even more difficult can be deleting or editing attributes of an implemented enti
 Note that it is necessary to change the domain model if you implement your application incrementally. You should, however, try to minimize the changes that require the API of the implemented domain model to be changed.
 
 \subsection{Domain Model of the Thesis Management System}
+\label{sec:domain-model-tms}
 
 As the domain model of the Thesis Management System is very complex, the author will describe it part by part. The complete domain model can be found in the appendix A.
 
@@ -338,4 +296,115 @@ See figure \ref{fig:domain-faq-entity} to see the designed model.
 
 \section{Implementation}
 
-The core project of this thesis is done by three students, therefore the implementation of it will be described in the thesis of student Jakub Cechacek.
+The core project of this thesis is created by three students, therefore the implementation of it will be described in the thesis of student Jakub Cechacek.
+
+\section{Evaluation}
+
+In this section, the author will evaluate all functional and non-functional requirements.
+
+\subsection{Functional Requirements}
+\label{sec:eval-func-requirements}
+
+This section contains evaluation of all functional requirements. Please refer to section \ref{sec:func-requirements} to see the list with the description.
+
+\begin{enumerate}
+    \item User management\\
+    Anyone can access users' profile (show page). The administrator can create new users on the page with the list of users, when they do, the password is sent to the entered user's email and activation is required. The administrator can also edit and delete users in the users' profiles.
+
+    \item Registration\\
+    Anonymous users can sign up on the registration page and it is possible to register only with emails hosted at a domain address that is explicitly entered in the system configuration by the administrator. When a user sings up, an activation email is send to their email address. If the user activates their account, the registration is complete, if not, it is not possible to log in and the account is deleted after 30 days.
+
+    \item Log In\\
+    Anonymous users can sign in using email and password if their account is activated. If the user does not remember their password, they can request a new password to be send to their email address.
+
+    \item Thesis topic management\\
+    List and details of topics can be accessed by anyone. Leaders can also create new topics and also edit and delete topics that they created. Deletion of topics that were already applied to is not possible unless the applications and theses associated with them are deleted. All required fields are available.
+
+    \item Category management\\
+    The list of categories is displayed on the page with the list of topics. Only administrators can create, edit or delete categories. It is not possible, however, to delete categories that already contain some topics. Instead, the topics must be either deleted or removed from the particular category first. The description field is shown as a tooltip text for each category. 
+
+    \item University management\\
+    Universities can be browsed by anyone, but only administrators can create, edit and delete universities. As a safety precaution, a university cannot be deleted if there are already topics, applications or theses associated with it (to delete such university, the associated theses, applications and topics must be deleted first).
+
+    \item Application management\\
+    Students can apply for topics by clicking on the button placed on the page showing a particular topic. When they do, they choose their university, the type of their study (Bachelor, Diploma) and optionally they provide a note. A notification is sent to the leader of the applied topic. The leader can decide to approve the application by clicking on the button ``Approve'', when they do, they are redirected to the page with a form for thesis and they have to create it to approve the application. If the leader approves the application, its student is notified.
+
+    \item Topics can be filtered\\
+    The system allows to filter topics by university, type, leader's full name, title, tag or category. All these filter options can be combined, the title and leader's full name is case insensitive, but unfortunately they are currently also sensitive to foreign characters.
+
+    \item Thesis management\\
+    Similarly to topic management, the list and details of theses can be accessed by anyone. Supervisors and Leaders can create new topics either from scratch, application or topic. Theses they created can be also deleted or edited by them. All required fields are available.
+
+    \item Supervisors can select universities they supervise at for each topic\\
+    There is a ``My Supervisions'' button on the page with a topic. When a supervisor uses the button, they are redirected to a page where they can choose universities they supervise at for that particular topic.
+
+    \item Supervisors can add private notes to theses\\
+    There is a ``Notes'' button on the page with a thesis. When a supervisor clicks on the button, a popup box with a textarea is displayed. They can enter or delete text as they wish, to save the notes, they have to use the ``Save'' button.
+
+    \item Authenticated user can subscribe for topics and theses\\
+    The ``Subscribe'' button is displayed on every page of topics and theses. If a user subscribes for a topic or thesis, they are sent notifications about all actions that are made to it, which includes edits, deletes and comment creates.
+
+    \item Authenticated user can unsubscribe from topics and theses\\
+    If a user does not with to receive notifications about actions made to topics or theses anymore, they can use the ``Unsubscribe'' button.
+
+    \item Theses can be filtered\\
+    The system allows to filter theses by title, supervisor's full name, assignee's full name, status, grade, type, university or tag. All these filter options can be combined, the title, supervisor's full name and assignee's full name are case insensitive, but unfortunately they are currently also sensitive to foreign characters.
+
+    \item File management for theses\\
+    Students can upload files to their theses on the thesis page by first selecting the files to be uploaded by the ``Select Files'' button and starting the upload by the ``Start Upload'' button. The supervisor of the thesis and the leader of the thesis' topic can also upload files to it.
+
+    \item Discussion for topics and theses\\
+    Authenticated users can comment on topics and thesis. They can also edit or delete their comments. The administrators and leaders can also create private comments that are visible only to users with those roles. The administrator can edit and delete any comment (not only those created by them), the leader can edit and delete comments that are created in topics created by them.
+
+    \item Full text search\\
+    There is a search box available on every page. If a user uses it, they are redirected to a page with the search results. 
+
+    \item Frequently Asked Questions (FAQ) management\\
+    Administrators can create/delete/edit frequently asked questions. The questions are internationalized and therefore the administrator not only needs to fill in the question and the answer of a FAQ, but they also have to choose the locale of the FAQ. Users see only FAQs created for the locale that they use.
+
+\end{enumerate}
+
+\subsection{Non-Functional Requirements}
+
+This section contains evaluation of all non-functional requirements. Please refer to section \ref{sec:non-func-requirements} to see the list with the description.
+
+\begin{enumerate}
+    \item Grails platform\\
+    This requirement was fulfilled by implementing the system using the Grails framework.
+
+    \item Authentication and authorization\\
+    The system requires the users to be authenticated to allow them to use most of the functionality. There are four roles -- Admin, Leader, Supervisor and Student, and each role has certain permissions, read section \ref{sec:eval-func-requirements} for more information.
+
+    \item Performance\\
+    We created a script that put 500 topics, theses, users and universities in the database of the Thesis Management System. The system's performance did not seem to be affected at all.
+
+    \item Deployment\\
+    The system is deployed on OpenShift using medium gear and cartridge JBoss EWS 2.0. To deploy the Thesis Management System on a different instance of OpenShift, follow these steps:
+    \begin{enumerate}
+        \item Create an OpenShift JBoss EWS 2 cartridge and add PostgreSQL and MongoDB cartridges.
+        \item Add remote OpenShift repository to your local project git repository.
+        \item Create file \texttt{.myenv} on OpenShift in the directory exported in \texttt{\$OPENSHIFT\_DATA\_DIR} with email credentials as environment variables like this:
+            \begin{verbatim}
+export OPENSHIFT_EMAIL_HOST="smtp.example.com"
+export OPENSHIFT_EMAIL_PORT=465
+export OPENSHIFT_EMAIL_USERNAME="e@exmpl.com"
+export OPENSHIFT_EMAIL_PASSWORD="password"
+            \end{verbatim}
+        \item Push your local repository to OpenShift.
+
+        \item[\emph{Note:}] You need at least medium gear, otherwise grails will not be able to build the application due to memory limitation. Or you can use small gear and build the application yourself.
+    \end{enumerate}
+
+    \item License\\
+    We chose the MIT license\,\cite{mit-license} for the Thesis Management System, which is a GPL compatible license\,\cite{gpl-compatible-licenses}.
+
+    \item Backup\\
+    There is available a shell script \texttt{backup.sh} for backing up both PostgreSQL and MongoDB. To create the backup, you just execute command \texttt{sh backup.sh} on OpenShift, which will create directory \texttt{thesis\_backup\_mongo} and file \texttt{thesis\_backup\_postgres} in directory \texttt{\$OPENSHIFT\_DATA\_DIR}.
+
+    \item Internationalization and localization\\
+    The system is internationalized and localized in English and Czech. The locale is either chosen from HTTP headers or the user can choose one by themselves.
+
+    \item Software development methodology\\
+    The system is developed iteratively and incrementally, see section \ref{sec:tms-methodology} for more details.
+
+\end{enumerate}
