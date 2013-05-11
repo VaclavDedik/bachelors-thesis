@@ -10,13 +10,13 @@ In the following text, the author will describe the architecture and design of t
     The system allows to create, read, update and delete (CRUD) users. User contains fields full name, email and password.
 
     \item Registration\\
-    Only students can sign up.
+    Only students can sign up and they have to agree to the terms of use.
 
     \item Log In\\
     Anonymous users can sign in using email and password.
 
     \item Thesis topic management\\
-    The system allows to CRUD thesis topics. Topic contains fields title and description in two languages and it is possible to assign the list of tags and categories to it. The management of the topic is done by its leader and the list of the universities that the topic is offered to is represented by the university list. There is also a field for the list of university supervisors, each supervisor is assigned a university that they supervise at. One topic can have zero or more university supervisors. Lastly, there is a field for the list of thesis types (which can contain e.g. diploma, bachelor) and a flag that represents enabled/disabled state of the topic to disallow students to create applications.
+    The system allows to CRUD thesis topics. Topic contains fields title and description in two languages and it is possible to assign the list of tags and categories to it. The management of a topic is done by its leader and the list of the universities that the topic is offered to is represented by the university list. There is also a field for the list of university supervisors, each supervisor is assigned a university that they supervise at. One topic can have zero or more university supervisors. Lastly, there is a field for the list of thesis types (which can contain e.g. diploma, bachelor) and a flag that represents enabled/disabled state of the topic to disallow students to apply for it.
 
     \item Category management\\
     The system allows to CRUD categories. Category contains fields title and description.
@@ -49,7 +49,7 @@ In the following text, the author will describe the architecture and design of t
     The system allows to upload files to theses.
 
     \item Discussion for topics and theses\\
-    Logged in users can comment on topics and theses and users with certain authority (Administrators and Leaders) can create comments that are not visible to students and guests.
+    Logged in users can comment on topics and theses and users with certain authority (administrators and leaders) can create comments that are not visible to students and guests.
 
     \item Full text search\\
     Theses and topics can be searched by a full text search engine.
@@ -296,7 +296,7 @@ See figure \ref{fig:domain-faq-entity} to see the designed model.
 
 \section{Implementation}
 
-The core project of this thesis is created by three students, therefore the implementation of it will be described in the thesis of student Jakub Cechacek.
+The core project of this thesis is created by three students, therefore the implementation of it will be described in the thesis of student Jakub Čecháček.
 
 \section{Evaluation}
 
@@ -309,34 +309,34 @@ This section contains evaluation of all functional requirements. Please refer to
 
 \begin{enumerate}
     \item User management\\
-    Anyone can access users' profile (show page). The administrator can create new users on the page with the list of users, when they do, the password is sent to the entered user's email and activation is required. The administrator can also edit and delete users in the users' profiles.
+    Anyone can access users' profiles (show page). The administrator can create new users on the page with the list of users, when they do, the password is sent to the entered user's email and activation is required. The administrator can also edit and delete users in the users' profiles.
 
     \item Registration\\
-    Anonymous users can sign up on the registration page and it is possible to register only with emails hosted at a domain address that is explicitly entered in the system configuration by the administrator. When a user sings up, an activation email is send to their email address. If the user activates their account, the registration is complete, if not, it is not possible to log in and the account is deleted after 30 days.
+    Anonymous users can sign up on the registration page, but it is only possible to register with email addresses hosted at a domain address that is explicitly entered in the system configuration by an administrator. It is also necessary to agree to the terms of use, otherwise it is not possible to complete the registration. When a user sings up, an activation email is send to their email address. If the user activates their account, the registration is complete, if not, it is not possible to log in and the account is deleted after 30 days.
 
     \item Log In\\
     Anonymous users can sign in using email and password if their account is activated. If the user does not remember their password, they can request a new password to be send to their email address.
 
     \item Thesis topic management\\
-    List and details of topics can be accessed by anyone. Leaders can also create new topics and also edit and delete topics that they created. Deletion of topics that were already applied to is not possible unless the applications and theses associated with them are deleted. All required fields are available.
+    List and details of topics can be accessed by anyone. Leaders can also create new topics, and edit and delete topics that they created. Deletion of topics that were already applied to is not possible unless the applications and theses associated with them are deleted. All required fields are available.
 
     \item Category management\\
-    The list of categories is displayed on the page with the list of topics. Only administrators can create, edit or delete categories. It is not possible, however, to delete categories that already contain some topics. Instead, the topics must be either deleted or removed from the particular category first. The description field is shown as a tooltip text for each category. 
+    The list of categories is displayed on the page with the list of topics. Only administrators can create, edit or delete categories. It is not possible, however, to delete categories that already contain some topics. Instead, the topics must be either deleted or removed from the category first. The description field is shown as a tooltip text for each category unless it is not filled in. 
 
     \item University management\\
     Universities can be browsed by anyone, but only administrators can create, edit and delete universities. As a safety precaution, a university cannot be deleted if there are already topics, applications or theses associated with it (to delete such university, the associated theses, applications and topics must be deleted first).
 
     \item Application management\\
-    Students can apply for topics by clicking on the button placed on the page showing a particular topic. When they do, they choose their university, the type of their study (Bachelor, Diploma) and optionally they provide a note. A notification is sent to the leader of the applied topic. The leader can decide to approve the application by clicking on the button ``Approve'', when they do, they are redirected to the page with a form for thesis and they have to create it to approve the application. If the leader approves the application, its student is notified.
+    Students can apply for topics by clicking on the button placed on the page showing a particular topic. When they do, they choose their university, the type of their study (Bachelor, Diploma) and optionally they provide a note. A notification is sent to the leader of the applied topic. The leader can decide to approve the application by clicking on the button ``Approve'', when they do, they are redirected to the page with a form for thesis and they have to create it to approve the application. If the leader approves the application, its student is automatically notified.
 
     \item Topics can be filtered\\
-    The system allows to filter topics by university, type, leader's full name, title, tag or category. All these filter options can be combined, the title and leader's full name is case insensitive, but unfortunately they are currently also sensitive to foreign characters.
+    The system allows to filter topics by university, type, leader's full name, title, tag or category. All these filter options can be combined, the title and leader's full name is case insensitive, but unfortunately they are currently  sensitive to foreign characters.
 
     \item Thesis management\\
     Similarly to topic management, the list and details of theses can be accessed by anyone. Supervisors and Leaders can create new topics either from scratch, application or topic. Theses they created can be also deleted or edited by them. All required fields are available.
 
     \item Supervisors can select universities they supervise at for each topic\\
-    There is a ``My Supervisions'' button on the page with a topic. When a supervisor uses the button, they are redirected to a page where they can choose universities they supervise at for that particular topic.
+    There is a ``My Supervisions'' button on the page with a topic. When a supervisor uses the button, they are redirected to a page where they can choose universities they supervise at for a particular topic.
 
     \item Supervisors can add private notes to theses\\
     There is a ``Notes'' button on the page with a thesis. When a supervisor clicks on the button, a popup box with a textarea is displayed. They can enter or delete text as they wish, to save the notes, they have to use the ``Save'' button.
@@ -348,19 +348,19 @@ This section contains evaluation of all functional requirements. Please refer to
     If a user does not with to receive notifications about actions made to topics or theses anymore, they can use the ``Unsubscribe'' button.
 
     \item Theses can be filtered\\
-    The system allows to filter theses by title, supervisor's full name, assignee's full name, status, grade, type, university or tag. All these filter options can be combined, the title, supervisor's full name and assignee's full name are case insensitive, but unfortunately they are currently also sensitive to foreign characters.
+    The system allows to filter theses by title, supervisor's full name, assignee's full name, status, grade, type, university or tag. All these filter options can be combined, the title, supervisor's full name and assignee's full name are case insensitive, but unfortunately they are currently sensitive to foreign characters.
 
     \item File management for theses\\
     Students can upload files to their theses on the thesis page by first selecting the files to be uploaded by the ``Select Files'' button and starting the upload by the ``Start Upload'' button. The supervisor of the thesis and the leader of the thesis' topic can also upload files to it.
 
     \item Discussion for topics and theses\\
-    Authenticated users can comment on topics and thesis. They can also edit or delete their comments. The administrators and leaders can also create private comments that are visible only to users with those roles. The administrator can edit and delete any comment (not only those created by them), the leader can edit and delete comments that are created in topics created by them.
+    Authenticated users can comment on topics and thesis. They can also edit or delete their comments. The administrators and leaders can create private comments that are visible only to users with those roles. The administrator can edit and delete any comment (not only those created by them), the leader can edit and delete comments that are created in topics created by them.
 
     \item Full text search\\
     There is a search box available on every page. If a user uses it, they are redirected to a page with the search results. 
 
     \item Frequently Asked Questions (FAQ) management\\
-    Administrators can create/delete/edit frequently asked questions. The questions are internationalized and therefore the administrator not only needs to fill in the question and the answer of a FAQ, but they also have to choose the locale of the FAQ. Users see only FAQs created for the locale that they use.
+    Administrators can create/delete/edit frequently asked questions. The questions are internationalized and therefore an administrator not only needs to fill in the question and the answer of a FAQ, but they also have to choose the locale of the FAQ. Users see only FAQs created for the locale that they use.
 
 \end{enumerate}
 
@@ -376,7 +376,7 @@ This section contains evaluation of all non-functional requirements. Please refe
     The system requires the users to be authenticated to allow them to use most of the functionality. There are four roles -- Admin, Leader, Supervisor and Student, and each role has certain permissions, read section \ref{sec:eval-func-requirements} for more information.
 
     \item Performance\\
-    We created a script that put 500 topics, theses, users and universities in the database of the Thesis Management System. The system's performance did not seem to be affected at all.
+    We created a script that put 500 topics, theses, users, applications and universities in the database of the Thesis Management System. The system's performance did not seem to be affected at all.
 
     \item Deployment\\
     The system is deployed on OpenShift using medium gear and cartridge JBoss EWS 2.0. To deploy the Thesis Management System on a different instance of OpenShift, follow these steps:
@@ -399,7 +399,7 @@ export OPENSHIFT_EMAIL_PASSWORD="password"
     We chose the MIT license\,\cite{mit-license} for the Thesis Management System, which is a GPL compatible license\,\cite{gpl-compatible-licenses}.
 
     \item Backup\\
-    There is available a shell script \texttt{backup.sh} for backing up both PostgreSQL and MongoDB. To create the backup, you just execute command \texttt{sh backup.sh} on OpenShift, which will create directory \texttt{thesis\_backup\_mongo} and file \texttt{thesis\_backup\_postgres} in directory \texttt{\$OPENSHIFT\_DATA\_DIR}.
+    There is available a shell script \texttt{backup.sh} for backing up both PostgreSQL and MongoDB. To create the backup, you just execute command \texttt{sh backup.sh} on OpenShift, which will create directory \texttt{thesis\_backup\_mongo} (containing the MongoDB backup) and file \texttt{thesis\_backup\_postgres.sql} (containing backup of PostgreSQL) in directory \texttt{\$OPENSHIFT\_DATA\_DIR}.
 
     \item Internationalization and localization\\
     The system is internationalized and localized in English and Czech. The locale is either chosen from HTTP headers or the user can choose one by themselves.
