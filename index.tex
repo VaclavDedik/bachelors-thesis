@@ -9,6 +9,8 @@
 \usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{pdfpages}
+\usepackage{etoolbox}
 
 \setcounter{secnumdepth}{3}
 
@@ -26,10 +28,15 @@
 
 \setlength{\parindent}{0,5cm}
 
+\newtoggle{withofficialdesc}
+\togglefalse{withofficialdesc}
+\input{flags}
+
 \hyphenation{data-bases para-digm blue-prints}
 \begin{document}
 \FrontMatter
 \ThesisTitlePage
+\iftoggle{withofficialdesc}{\includepdf[pages={1}]{others/official-desc.pdf}}
 
 \begin{ThesisDeclaration}		
 \DeclarationText
