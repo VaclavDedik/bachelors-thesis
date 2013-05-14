@@ -13,7 +13,7 @@
 
             "cmd": ["make", "start"],
 
-            "working_dir": "/home/vdedik/Projects/thesis-text"
+            "working_dir": "/home/vdedik/Projects/Bachelors-Thesis/thesis-text"
         }
     ]
 }
