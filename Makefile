@@ -1,10 +1,10 @@
-.PHONY: all bp clean
+.PHONY: all thesis-text clean
 
 OD=false
 
-all: bp
+all: thesis-text
 
-bp: 
+thesis-text: 
 ifeq ($(OD),true)
 	echo "\toggletrue{withofficialdesc}" > flags.tex
 else
@@ -14,18 +14,18 @@ endif
 	bibtex index.aux
 	pdflatex -interaction=nonstopmode -synctex=1 index.tex > /dev/null
 	pdflatex -interaction=nonstopmode -synctex=1 index.tex > /dev/null
-	mv index.pdf bp.pdf
+	mv index.pdf thesis-text.pdf
 
-start: bp
-	evince bp.pdf
+start: thesis-text
+	evince thesis-text.pdf
 
-slice: bp
+slice: thesis-text
 ifeq ($(OD),true)
-	pdftk bp.pdf cat 12 19-20 24 26-31 33-35 46-47 output color-thesis.pdf
-	pdftk bp.pdf cat 1-11 13-18 21-23 25 32 36-45 48 output black-thesis.pdf
+	pdftk thesis-text.pdf cat 12 19-20 24 26-31 33-35 46-47 output color-thesis.pdf
+	pdftk thesis-text.pdf cat 1-11 13-18 21-23 25 32 36-45 48 output black-thesis.pdf
 else
-	pdftk bp.pdf cat 11 18-19 23 25-30 32-34 45-46 output color-thesis.pdf
-	pdftk bp.pdf cat 1-10 12-17 20-22 24 31 35-44 47 output black-thesis.pdf
+	pdftk thesis-text.pdf cat 11 18-19 23 25-30 32-34 45-46 output color-thesis.pdf
+	pdftk thesis-text.pdf cat 1-10 12-17 20-22 24 31 35-44 47 output black-thesis.pdf
 endif
 
 clean:

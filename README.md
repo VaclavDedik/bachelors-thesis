@@ -1,5 +1,24 @@
-Thesis management system for industrial partner Red Hat
+Thesis Management System for Industrial Partner Red Hat
 ===========
-Description
------------
-Cílem práce je navrhnout a implementovat informační systém pro správu zadání kvalifikačních prací průmyslového partnera Red Hat. Systém bude implementován za použití platformy Grails a nahradí současnou agendu v podobě wiki stránky. Vývoj bude vzhledem k rozsahu projektu realizován v týmu tří studentů. V praktické části student implementuje správu uživatelů, autentizaci a autorizaci. V teoretické části se student zaměří na architekturu a návrh systému, analýzu a popis použitých nástrojů a metodiku vývoje.
+
+How to build the thesis text
+----------------------------
+
+All you need to do is run this command:
+
+    $ make
+
+If you also want to run evince, use this command:
+
+    $ make start
+
+If you want to slice the output pdf file in colered and black pages (using pdftk),
+use this command:
+
+    $ make slice
+
+You can also prepend parameter `OD=true` to include the official description of 
+the thesis, like this:
+
+    $ make OD=true
+
