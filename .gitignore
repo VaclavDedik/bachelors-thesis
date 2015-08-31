@@ -24,7 +24,7 @@
 *.nav
 *.nlo
 *.out
-/*.pdf
+/text/*.pdf
 *.pdfsync
 *.ps
 *.snm
@@ -36,4 +36,4 @@
 *.tdo
 *.fls
 *.sublime-workspace
-flags.tex
+/text/flags.tex
